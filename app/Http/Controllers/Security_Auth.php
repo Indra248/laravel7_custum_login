@@ -32,7 +32,7 @@ class Security_Auth extends Controller
 
         $cek1 = $checkValidate->get();
         if(!$cek1->isEmpty()){
-            $pwd     = (Azdgcrypt::decrypt($cek1[0]->password) == $pwdPOST ? 1 : 0);
+            $pwd     = (Azdgdecrypt($cek1[0]->password) == $pwdPOST ? 1 : 0);
 
             if($pwd == 1){
                 #taruh sessionnya
