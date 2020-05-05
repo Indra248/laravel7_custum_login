@@ -7,18 +7,17 @@ use App\Act_admin;
 class ControllerHome extends Controller
 {
     public function index(){     
-        $data['data'] = Act_admin::showCust();
-
-        #++ MODUL TABEL-20
-        $pdntable['page']     = (empty($_GET['page']) ? '' : $_GET['page']*10);
-        $pdntable['Field']    = ['CUSTOMER NAME', "CUSTOMER CITY"];
-        $pdntable['RowNames'] = ['CUST_NAME', "CUST_CITY"];
-
-
-        return view('Admin/home', array_merge($data, $pdntable));
+        $data = Act_admin::showCust();
+        
+        return view('Admin/home',$data);
     }
 
-    public function satu(){
-        echo "ada";
+    public function AddUser(){
+        return view('Admin/form_AddUser');
+    }
+
+    public function sini(){
+        echo Azdgdecrypt($_POST['a']);die;
+        return view('Admin/form_AddUser');
     }
 }

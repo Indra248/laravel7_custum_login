@@ -42,7 +42,8 @@
             "database/factories"
         ],
         "files": [
-            "app/Http/Helpers/Act_main.php"
+            "app/Http/Helpers/Act_main.php",
+            "app/Http/Helpers/pdntable.php"
         ]
     },
     "autoload-dev": {

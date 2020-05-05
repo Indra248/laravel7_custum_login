@@ -1,5 +1,5 @@
 <?php
-use Illuminate\Support\Facades\DB;
+// use Illuminate\Support\Facades\DB;
 
 /*Helper Module  
     Indra Pandean, 1-may-2020

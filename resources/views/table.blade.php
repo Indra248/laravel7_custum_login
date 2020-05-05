@@ -41,41 +41,105 @@
               <th scope="col">No</th>
               @foreach ($Field as $FieldRow)
               <th scope="col">{{$FieldRow}}</th>
-              @endforeach
+              @endforeach   
           </tr>
         </thead>
         <tbody>
         <?php 
-        $no=($page== 10 ? 1 : $page);
+        $Rno = 0;
+        $no  =($page== 10 ? 0 : $page);
         ?>
         @foreach ($data as $item)
-        <tr class="option_{{$item->CUST_CODE}}" onclick="openOPT('{{$item->CUST_CODE}}')" style="cursor:pointer;">
+        @php
+         $CountId = count($id);
+                    for ($b=0; $b < $CountId ; $b++) { 
+                        $tampung[$b] = $item->{$id[$b]};
+                    }
+        $tampung = array_map('trim', $tampung);            
+          $Rno = $no++;
+        @endphp
+        <tr class="option_{{$Rno}}" onclick="openOPT('{{$Rno}}')" style="cursor:pointer;">
                 <th width="10px"><?php echo $no++;?></th>
                 <?php
                 for($i=0;$i <count($RowNames);$i++){?>
-                <th><?php echo $item->{$RowNames[0]};?></th>
+                    <th><?php echo $item->{$RowNames[$i]};?></th>
                 <?php }?>
             </tr>
-            <tr style="display:none;background:#e3f1ff;" class="open_opt_{{$item->CUST_CODE}}">   
+            <tr style="display:none;background:#e3f1ff;" class="open_opt_{{$Rno}}">   
                 <td colspan="<?php echo count($RowNames) + 1; ?>">
-                    <button class="btn btn-warning">Edit</button>
-                    <button class="btn btn-danger">Delete</button> 
+                    &nbsp;&nbsp;&nbsp;
+                <?php 
+                if (!empty($action['PROSES'])) {
+                   for($a=0;$a < count($action["PROSES"]);$a++){
+                       echo "<button class='btn btn-primary btn-sm' onclick='click_proses(\"".Azdgcrypt(implode('|',$tampung))."\")'>".$action['PROSES'][$a]['nama_proses']."</button> &nbsp;";
+                    }   
+                }
+                if(!empty($action['POPUP'])){
+                    for($a=0;$a < count($action["POPUP"]);$a++){
+                       echo "<button class='btn btn-warning btn-sm' data-toggle=\"modal\" data-target=\"#exampleModal\" onclick='click_popup(\"".Azdgcrypt(implode('|',$tampung)).'|'.$action['POPUP'][$a]['url']."\", \"".$action['POPUP'][$a]['nama_popup']."\")'>".$action['POPUP'][$a]['nama_popup']."</button> &nbsp;";
+                   } 
+                }
+                ?>  
+                
                 </td>
             </tr>
          @endforeach
+         {{-- {{dd($tampung)}} --}}
 
         </tbody>
       </table>
       
       {{$data->links()}}
 
-    <div class="col-12">
-       
+   
+  <!-- Modal -->
+  <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-xl" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">Form <span id="PopupName"></span></h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <div class="LoadData"></div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+          <button type="button" class="btn btn-primary">Save changes</button>
+        </div>
+      </div>
     </div>
+  </div>
+
 </div>
+<!-- Large modal -->
+{{-- <button type="button" class="btn btn-primary">Large modal</button> --}}
+
+
+
 
 <script>
     function openOPT(data){
-        $('.open_opt_'+data).toggle();
+        $('.open_opt_'+data).toggle(function(){
+          
+        });
+    }
+
+    function click_proses(dataa){
+        alert(dataa);
+
+    }
+
+    function click_popup(dataa, PopupName){
+        $('#PopupName').text(PopupName);
+        let data = dataa.split('|');
+        let url  = data[data.length-1];
+        $('.LoadData').load(url, {a:data[0], "_token": "{{ csrf_token() }}"}, function (response, status, request) {
+            
+        });
+
+        
     }
 </script>
